@@ -1,33 +1,37 @@
 import React from "react";
 import "../styles/Form.css"
-import memesData from "../MemesData.js"
-
 let ImageIcon= "/images/ImageIcon.png"
 let memeUrl
 
 export default function Form(){
+
   const [meme, setMeme] = React.useState({
     topText:"",
     bottomText:"",
     memeImage:"https://i.imgflip.com/261o3j.jpg"
   })
 
-  console.log(meme)
+  const [allMemes, setAllMemes] = React.useState([])
 
-  const [allMemeIamges, setAllMemeImages] = React.useState(memesData.data.memes)
+  React.useEffect(() => {
+    console.log("Fetched")
+    fetch("https://api.imgflip.com/get_memes")
+    .then(res => res.json())
+    .then(resData => setAllMemes(resData.data.memes))
+  },[])
 
   function getMemeImage(){
 
-    
     let randomNum= Math.random();
-    randomNum*=allMemeIamges.length
+    randomNum*=allMemes.length
     let choosenNum= parseInt(randomNum)
     
-    memeUrl=allMemeIamges[choosenNum].url
+    memeUrl=allMemes[choosenNum].url
     setMeme(prevMeme => ({
       ...prevMeme,
       memeImage:memeUrl
     }) )
+
   }
 
   function handleChange(event){
